@@ -7,7 +7,7 @@ printf "\e[32m[!!!] MySQL 'root' password is: %s\e[0m\n" ${MYSQL_ROOT_PASSWORD}
 MYSQL_DATABASE="mutillidae"
 MYSQL_USER="mutillidae"
 MYSQL_PASSWORD=$(pwgen -c -n -s -B 15 1)
-printf "\e[32m[!!!] MySQL %s password is: %s\e[0m\n" ${MYSQL_USER} ${MYSQL_PASSWORD}
+printf "\e[32m[!!!] MySQL '%s' password is: %s\e[0m\n" ${MYSQL_USER} ${MYSQL_PASSWORD}
 
 tfile=$(mktemp)
 cat << EOF > $tfile
