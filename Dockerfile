@@ -1,18 +1,20 @@
 FROM alpine:latest
-LABEL version 1.0
+LABEL version 1.1
 LABEL description "Mutillidae Container with NGINX"
 MAINTAINER Edoardo Rosa <edoardo [dot] rosa90 [at] gmail [dot] com> (edoz90)
 
+ENV MUTILLIDAE_VERSION 2.7.11
+
 # == BASIC SOFTWARE ============================================================
 
-RUN sed -i -e 's/v[[:digit:]]\.[[:digit:]]/edge/g' /etc/apk/repositories
+RUN sed -i -e 's/v[[:digit:]]\.[[:digit:]]*/edge/g' /etc/apk/repositories
 RUN apk update && apk upgrade
 
 RUN apk add logrotate rsyslog supervisor goaccess \
-            nginx php mariadb mariadb-client pwgen php-fpm \
-            vim bash-completion nginx-vim tmux wget unzip
+            nginx php mariadb mariadb-client pwgen \
+            wget bash unzip --no-cache
 
-RUN apk add php-mysqli php-mbstring php-session php-simplexml php-curl php-json
+RUN apk add php-fpm php-mysqli php-mbstring php-session php-simplexml php-curl php-json --no-cache
 
 # == NGINX CONFIGURATION ========================================================
 
@@ -21,18 +23,12 @@ RUN mkdir -p /usr/share/nginx/html
 RUN mkdir -p /run/nginx
 RUN chown -R http:http /usr/share/nginx/html
 
-# == MYSQL CONFIGURATION =========================================================
-
-RUN chown -R mysql:mysql /var/lib/mysql
-RUN mkdir -p /run/mysqld
-RUN chown -R mysql:mysql /run/mysqld
-RUN chmod 777 /var/tmp/
-ADD dist/install_db.sh /tmp/install_db.sh
-
 # == INSTALLATION ================================================================
 
-RUN wget -q https://sourceforge.net/projects/mutillidae/files/latest/download -O mutillidae.zip
+RUN wget -q https://github.com/webpwnized/mutillidae/archive/v${MUTILLIDAE_VERSION}.zip -O mutillidae.zip
 RUN unzip -q mutillidae.zip -d /usr/share/nginx/html/
+RUN mv /usr/share/nginx/html/mutillidae* /usr/share/nginx/html/mutillidae
+ADD dist/install_db.sh /tmp/install_db.sh
 RUN bash /tmp/install_db.sh
 RUN rm /tmp/install_db.sh
 RUN sed -i 's/^error_reporting = .*/error_reporting = E_ALL \& ~E_NOTICE \& ~E_DEPRECATED/' /etc/php7/php.ini
@@ -46,6 +42,7 @@ ADD dist/goaccess.conf /etc/goaccess.conf
 ADD dist/logrotate.conf /etc/logrotate.d/nginx
 ADD dist/rsyslog.conf /etc/rsyslog.d/90.nginx.conf
 ADD dist/supervisord.ini /etc/supervisor.d/supervisord.ini
+RUN apk del wget unzip bash
 
 # == ENTRYPOINT ================================================================
 
