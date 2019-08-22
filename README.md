@@ -1,5 +1,5 @@
 # docker-mutillidae [![Build Status](https://travis-ci.org/edoz90/docker-mutillidae.svg?branch=master)](https://travis-ci.org/edoz90/docker-mutillidae)
-Dockerfile to run [OWASP Mutillidae II](https://sourceforge.net/projects/mutillidae/) with NGINX
+Dockerfile to run [OWASP Mutillidae II](https://github.com/webpwnized/mutillidae) with NGINX
 
 # Steps
 
