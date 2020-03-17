@@ -1,7 +1,7 @@
 FROM alpine:latest
 LABEL version 1.1
 LABEL description "Mutillidae Container with NGINX"
-MAINTAINER Edoardo Rosa <edoardo [dot] rosa90 [at] gmail [dot] com> (edoz90)
+MAINTAINER Edoardo Rosa <edoardo [dot] rosa90 [at] gmail [dot] com> (notdodo)
 
 ENV MUTILLIDAE_VERSION 2.7.11
 
